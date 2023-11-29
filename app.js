@@ -13,7 +13,12 @@ const { serverError, notFound } = require('./middlewares/errorHandling');
 const PORT = process.env.PORT || 3000;
 const SENTRY_DSN = process.env.SENTRY_DSN;
 
-app.use(cors());
+
+app.use(
+  cors({
+    origin: '*',
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
@@ -35,6 +40,15 @@ app.use(Sentry.Handlers.tracingHandler());
 // swagger
 const file = fs.readFileSync(path.join(__dirname, './docs.yaml'), 'utf8');
 const swaggerDocument = yaml.parse(file);
+app.use(
+  '/docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, {
+    customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+    customJs: ['https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js', 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js'],
+    customSiteTitle: 'CourseHub API Documentation 🚀',
+  })
+);
 
 // routes
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
