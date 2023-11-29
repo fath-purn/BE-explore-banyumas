@@ -1,0 +1,48 @@
+###
+GET http://localhost:3000/api/v1/
+
+### 
+POST http://localhost:3000/api/v1/admin/register
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+### 
+POST http://localhost:3000/api/v1/admin/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+###
+GET http://localhost:3000/api/v1/admin/whoami
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTcwMDg0MzU0OCwiZXhwIjoxNzAwOTI5OTQ4fQ.bhiG0dJoWQxuR6uml7MGpM-X1Jsmjo608MpVh8OezAc
+
+### dapatkan semua hotel
+GET http://localhost:3000/api/v1/hotel
+
+### dapatkan hotel berdasarkan id
+GET http://localhost:3000/api/v1/hotel/:id
+
+### create hotel
+POST http://localhost:3000/api/v1/hotel
+Content-Type: application/json
+
+{
+    "name": "Hotel 1",
+    "address": "Jl. Hotel 1",
+    "phone": "08123456789",
+    "email": ""
+}
+
+### update hotel
+PUT http://localhost:3000/api/v1/hotel/:id
+
+### delete hotel
+DELETE http://localhost:3000/api/v1/hotel/:id
+

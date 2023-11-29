@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Kecamatan {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  wisata    Wisata[]
+  hotel     Hotel[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Wisata {
+  id          Int         @id @default(autoincrement())
+  nama        String
+  deskripsi   String
+  alamat      String
+  maps        String
+  price       Int
+  gambar      Gambar[]
+  idKecamatan Int
+  kecamatan   Kecamatan   @relation(fields: [idKecamatan], references: [id])
+  keterangan  Keterangan?
+  ulasan      Ulasan[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Hotel {
+  id          Int        @id @default(autoincrement())
+  nama        String
+  deskripsi   String
+  alamat      String
+  maps        String
+  price       Int
+  gambar      Gambar[]
+  idKecamatan Int
+  kecamatan   Kecamatan  @relation(fields: [idKecamatan], references: [id])
+  fasilitas   Fasilitas?
+  ulasan      Ulasan[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Gambar {
+  id         Int      @id @default(autoincrement())
+  idImagekit String   @unique
+  nama       String
+  url        String
+  wisataId   Int?
+  wisata     Wisata?  @relation(fields: [wisataId], references: [id])
+  hotelId    Int?
+  hotel      Hotel?   @relation(fields: [hotelId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Keterangan {
+  id        Int      @id @default(autoincrement())
+  jarak     Int
+  buka      String
+  tutup     String
+  akomodasi Int
+  kolam     Boolean
+  parkir    Boolean
+  tiket     Int
+  idWisata  Int      @unique
+  wisata    Wisata   @relation(fields: [idWisata], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Fasilitas {
+  id          Int      @id @default(autoincrement())
+  wifi        Boolean
+  bar         Boolean
+  roomService Boolean
+  breakfast   Boolean
+  restaurant  Boolean
+  pool        Boolean
+  parkir      Boolean
+  bathrom     Boolean
+  bedroom     Boolean
+  idHotel     Int      @unique
+  hotel       Hotel    @relation(fields: [idHotel], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Ulasan {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  ulasan    String
+  wisataId  Int?
+  wisata    Wisata?  @relation(fields: [wisataId], references: [id])
+  hotelId   Int?
+  Hotel     Hotel?   @relation(fields: [hotelId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
