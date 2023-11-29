@@ -6,7 +6,7 @@ info:
 servers:
   - url: http://localhost:3000/api/v1
     description: local server
-  - url: http://localhost:3000/api/v1
+  - url: https://be-explore-banyumas.vercel.app/api/v1
     description: Development server
 paths:
   # hotel
