@@ -6,19 +6,65 @@ const { createHotelSchema } = require("../validations/validation");
 
 const getAllHotel = async (req, res, next) => {
   try {
-    let { page = 1, limit = 10 } = req.query;
-    page = Number(page);
-    limit = Number(limit);
-
     try {
+      if (req.query.length > 0) {
+        let { page = 1, limit = 10 } = req.query;
+        page = Number(page);
+        limit = Number(limit);
+        const getHotel = await prisma.hotel.findMany({
+          include: {
+            gambar: true,
+            fasilitas: true,
+            kecamatan: true,
+          },
+          skip: (page - 1) * limit,
+          take: limit,
+        });
+  
+        // jadikan 1 object
+        const hotel = getHotel.map((h) => {
+          const { gambar, fasilitas, kecamatan, ...rest } = h;
+          const filteredItem = {
+            ...rest,
+            gambar: gambar.map((g) => g.url),
+            fasilitas: {
+              wifi: fasilitas.wifi,
+              bar: fasilitas.bar,
+              roomService: fasilitas.roomService,
+              breakfast: fasilitas.breakfast,
+              restaurant: fasilitas.restaurant,
+              pool: fasilitas.pool,
+              parkir: fasilitas.parkir,
+              bathrom: fasilitas.bathrom,
+              bedroom: fasilitas.bedroom,
+            },
+            kecamatan: kecamatan.nama,
+          };
+          return Object.fromEntries(
+            Object.entries(filteredItem).filter(([_, value]) => value !== undefined)
+          );
+        });
+  
+        const { _count } = await prisma.hotel.aggregate({
+          _count: { id: true },
+        });
+  
+        const pagination = getPagination(req, res, _count.id, page, limit);
+  
+        return res.status(200).json({
+          success: true,
+          message: "OK",
+          err: null,
+          data: { pagination, hotel },
+        });
+      }
+
       const getHotel = await prisma.hotel.findMany({
         include: {
           gambar: true,
           fasilitas: true,
           kecamatan: true,
         },
-        skip: (page - 1) * limit,
-        take: limit,
       });
 
       // jadikan 1 object
@@ -45,17 +91,12 @@ const getAllHotel = async (req, res, next) => {
         );
       });
 
-      const { _count } = await prisma.hotel.aggregate({
-        _count: { id: true },
-      });
 
-      const pagination = getPagination(req, res, _count.id, page, limit);
-
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "OK",
         err: null,
-        data: { pagination, hotel },
+        data: hotel,
       });
     } catch (err) {
       return res.status(400).json({

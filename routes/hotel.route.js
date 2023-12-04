@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { upload } = require("../libs/multer");
+const verifyToken = require('../libs/verifyToken');
 
 const {
   getAllHotel,
@@ -11,9 +12,9 @@ const {
 
 router.get("/", getAllHotel);
 router.get("/:id", getHotelById);
-router.post("/", upload.array("image"), createHotel);
-router.put("/:id", upload.array("image"), updateHotel);
-router.delete("/:id", deleteHotel);
+router.post("/", upload.array("image"), verifyToken, createHotel);
+router.put("/:id", upload.array("image"), verifyToken, updateHotel);
+router.delete("/:id", verifyToken, deleteHotel);
 
 router.post('/keterangan, ')
 

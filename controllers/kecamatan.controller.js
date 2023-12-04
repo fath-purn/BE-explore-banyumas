@@ -4,22 +4,31 @@ const path = require("path");
 
 const getAllKecamatan = async (req, res, next) => {
   try {
-    let { page = 1, limit = 10 } = req.query;
-    page = Number(page);
-    limit = Number(limit);
     try {
+      if (req.query.length > 0) {
+        let { page = 1, limit = 10 } = req.query;
+        page = Number(page);
+        limit = Number(limit);
+        const kecamatan = await prisma.kecamatan.findMany({});
+  
+        const { _count } = await prisma.kecamatan.aggregate({
+          _count: true,
+        });
+  
+        const pagination = getPagination(req, res, _count.id, page, limit);
+  
+        res.status(200).json({
+          status: true,
+          message: "Success!",
+          data: { pagination, kecamatan },
+        });
+      }
+
       const kecamatan = await prisma.kecamatan.findMany({});
-
-      const { _count } = await prisma.kecamatan.aggregate({
-        _count: true,
-      });
-
-      const pagination = getPagination(req, res, _count.id, page, limit);
-
       res.status(200).json({
         status: true,
         message: "Success!",
-        data: { pagination, kecamatan },
+        data: kecamatan,
       });
     } catch (err) {
       res.status(400).json({

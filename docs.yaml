@@ -4,10 +4,10 @@ info:
   description: This is a sample Explore Banyumas server.
   version: '1.0.0'
 servers:
-  - url: http://localhost:3000/api/v1
-    description: local server
   - url: https://be-explore-banyumas.vercel.app/api/v1
     description: Development server
+  - url: http://localhost:3000/api/v1
+    description: local server
 paths:
   # hotel
   /hotel:
@@ -20,22 +20,18 @@ paths:
       parameters:
         - name: page
           in: query
-          required: true
           description: Get users by page
           schema:
             type : integer
             format: int64
             minimum: 1
-            default: 1
         - name: limit
           in: query
-          required: true
           description: Get users by limit
           schema:
             type : integer
             format: int64
             minimum: 1
-            default: 10
       responses:
         "200":
           description: Successful operation
@@ -133,7 +129,8 @@ paths:
                   type: boolean
                   default: true
                   description: Jika tidak ada bisa dikosongi
-                
+      security:
+        - bearerAuth: []
       responses:
         '201':
           description: OK!
@@ -250,7 +247,8 @@ paths:
                   type: boolean
                   default: true
                   description: Jika tidak ada bisa dikosongi
-                
+      security:
+        - bearerAuth: []          
       responses:
         '201':
           description: OK!
@@ -293,6 +291,8 @@ paths:
                     example: null
         '400':
           description: Invalid status value
+      security:
+      - bearerAuth: []
     
   # wisata
   /wisata:
@@ -305,22 +305,18 @@ paths:
       parameters:
         - name: page
           in: query
-          required: true
           description: Get users by page
           schema:
             type : integer
             format: int64
             minimum: 1
-            default: 1
         - name: limit
           in: query
-          required: true
           description: Get users by limit
           schema:
             type : integer
             format: int64
             minimum: 1
-            default: 10
       responses:
         "200":
           description: Successful operation
@@ -405,7 +401,8 @@ paths:
                 tiket:
                   type: integer
                   default: 50000
-                
+      security:
+        - bearerAuth: []          
       responses:
         '201':
           description: OK!
@@ -509,6 +506,8 @@ paths:
                 tiket:
                   type: integer
                   default: 50000
+      security:
+        - bearerAuth: []            
       responses:
         '201':
           description: OK!
@@ -551,6 +550,8 @@ paths:
                     example: null
         '400':
           description: Invalid status value
+      security:
+        - bearerAuth: []
 
   # kecamatan
   /kecamatan:
@@ -560,25 +561,6 @@ paths:
       summary: Mendapatkan data kecamatan
       description: Mendapatkan semua data kecamatan
       operationId: getKecamatan
-      parameters:
-        - name: page
-          in: query
-          required: true
-          description: Get users by page
-          schema:
-            type : integer
-            format: int64
-            minimum: 1
-            default: 1
-        - name: limit
-          in: query
-          required: true
-          description: Get users by limit
-          schema:
-            type : integer
-            format: int64
-            minimum: 1
-            default: 10
       responses:
         "200":
           description: Successful operation
@@ -592,31 +574,24 @@ paths:
                       data:
                         type: object
                         properties:
-                          pagination:
-                            $ref: "#/components/schemas/Pagination"
-                          kecamatan:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                id:
-                                  type: integer
-                                  example: 1
-                                nama:
-                                  type: string
-                                  example: "Kecamatan 1"
-                                createdAt:
-                                  type: string
-                                  example: "2021-08-01T00:00:00.000Z"
-                                updatedAt:
-                                  type: string
-                                  example: "2021-08-01T00:00:00.000Z"
-                                jumlah_hotel:
-                                  type: integer
-                                  example: 1
-                                jumlah_wisata:
-                                  type: integer
-                                  example: 1       
+                          id:
+                            type: integer
+                            example: 1
+                          nama:
+                            type: string
+                            example: "Kecamatan 1"
+                          createdAt:
+                            type: string
+                            example: "2021-08-01T00:00:00.000Z"
+                          updatedAt:
+                            type: string
+                            example: "2021-08-01T00:00:00.000Z"
+                          jumlah_hotel:
+                            type: integer
+                            example: 1
+                          jumlah_wisata:
+                            type: integer
+                            example: 1       
         '400':
           description: Invalid status value
 
@@ -636,6 +611,8 @@ paths:
                 nama:
                   type: string
                   default: "Kecamatan 1"
+      security:
+        - bearerAuth: []
       responses:
         '201':
           description: OK!
@@ -801,6 +778,8 @@ paths:
                 nama:
                   type: string
                   default: "Kecamatan 1"
+      security:
+        - bearerAuth: []
       responses:
         '201':
           description: OK!
@@ -843,6 +822,8 @@ paths:
                     example: null
         '400':
           description: Invalid status value
+      security:
+        - bearerAuth: []
 
   # ulasan
   /ulasan:
@@ -855,22 +836,18 @@ paths:
       parameters:
         - name: page
           in: query
-          required: true
           description: Get users by page
           schema:
             type : integer
             format: int64
             minimum: 1
-            default: 1
         - name: limit
           in: query
-          required: true
           description: Get users by limit
           schema:
             type : integer
             format: int64
             minimum: 1
-            default: 10
       responses:
         "200":
           description: Successful operation
@@ -1081,6 +1058,48 @@ paths:
                   data:
                     type: object
                     example: null
+        '400':
+          description: Invalid status value
+      security:
+        - bearerAuth: []
+        
+  /admin/login:
+    post:
+      tags:
+        - Admin
+      summary: Login admin
+      description: Login admin
+      operationId: login-admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  default: "yowwww"
+                password:
+                  type: string
+                  default: "adanya"
+      responses:
+        '201':
+          description: OK!
+        '400':
+          description: Invalid status value
+  /admin/whoami:
+    get:
+      tags:
+        - Admin
+      summary: Mendapatkan ulasan
+      description: Mendapatkan semua ulasan
+      operationId: getUlasan
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successful operation
         '400':
           description: Invalid status value
 

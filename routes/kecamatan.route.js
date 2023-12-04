@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const verifyToken = require('../libs/verifyToken');
 
 const {
   getAllKecamatan,
@@ -16,8 +17,8 @@ router.get("/", getAllKecamatanAndCountHotelOrWisata);
 router.get("/hotel/:id", getAllHotelByKecamatan);
 router.get("/wisata/:id", getAllWisataByKecamatan);
 router.get("/:id", getKecamatanById);
-router.post("/", upload.single('ads'), createKecamatan);
-router.put("/:id", upload.single('ads'), updateKecamatan);
-router.delete("/:id", deleteKecamatan);
+router.post("/", upload.single('ads'), verifyToken, createKecamatan);
+router.put("/:id", upload.single('ads'), verifyToken, updateKecamatan);
+router.delete("/:id", verifyToken, deleteKecamatan);
 
 module.exports = router;

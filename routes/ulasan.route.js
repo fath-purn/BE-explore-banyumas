@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const {upload} = require("../libs/multer");
+const verifyToken = require('../libs/verifyToken');
 
 const {
   getAllUlasan,
@@ -13,6 +14,6 @@ router.get("/", getAllUlasan);
 router.get("/:id", getUlasanById);
 router.post("/", upload.single(''), createUlasan);
 router.put("/:id", upload.single(''), updateUlasan);
-router.delete("/:id", deleteUlasan);
+router.delete("/:id", verifyToken, deleteUlasan);
 
 module.exports = router;

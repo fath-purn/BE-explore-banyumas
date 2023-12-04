@@ -1,24 +1,26 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
-const prisma = require('./prisma');
+const prisma = require("./prisma");
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
+  let { authorization } = req.headers;
+  
+  if (!authorization) {
     return res.status(401).json({
-      success: false,
-      message: 'Unauthorized',
-      err: 'No token provided',
+      status: false,
+      message: "Unauthorized",
+      err: "missing token on header!",
       data: null,
     });
   }
 
-  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
+  authorization = authorization.replace("Bearer ", "");
+
+  jwt.verify(authorization, JWT_SECRET, async (err, decoded) => {
     if (err) {
       return res.status(401).json({
         success: false,
-        message: 'Unauthorized',
+        message: "Unauthorized",
         err: err.message,
         data: null,
       });

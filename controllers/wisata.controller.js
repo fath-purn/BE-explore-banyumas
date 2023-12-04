@@ -6,19 +6,65 @@ const { createWisataSchema } = require("../validations/validation");
 
 const getAllWisata = async (req, res, next) => {
   try {
-    let { page = 1, limit = 10 } = req.query;
-    page = Number(page);
-    limit = Number(limit);
-
     try {
+      if (req.query.length > 0) {
+        let { page = 1, limit = 10 } = req.query;
+        page = Number(page);
+        limit = Number(limit);
+        const wisata = await prisma.wisata.findMany({
+          include: {
+            gambar: true,
+            keterangan: true,
+            kecamatan: true,
+          },
+          skip: (page - 1) * limit,
+          take: limit,
+        });
+
+        // jadikan 1 object
+        const wisataObject = wisata.map((w) => {
+          const { gambar, keterangan, kecamatan, ...rest } = w;
+          const filteredItem = {
+            ...rest,
+            gambar: gambar.map((g) => g.url),
+            keterangan: {
+              jarak: keterangan.jarak,
+              buka: keterangan.buka,
+              tutup: keterangan.tutup,
+              akomodasi: keterangan.akomodasi,
+              kolam: keterangan.kolam,
+              parkir: keterangan.parkir,
+              tiket: keterangan.tiket,
+            },
+            kecamatan: kecamatan.nama,
+          };
+          return Object.fromEntries(
+            Object.entries(filteredItem).filter(
+              ([_, value]) => value !== undefined
+            )
+          );
+        });
+
+        const { _count } = await prisma.wisata.aggregate({
+          _count: true,
+        });
+
+        const pagination = getPagination(req, res, _count.id, page, limit);
+
+        return res.status(200).json({
+          success: true,
+          message: "OK",
+          err: null,
+          data: { pagination, wisataObject },
+        });
+      }
+
       const wisata = await prisma.wisata.findMany({
         include: {
           gambar: true,
           keterangan: true,
           kecamatan: true,
         },
-        skip: (page - 1) * limit,
-        take: limit,
       });
 
       // jadikan 1 object
@@ -44,18 +90,11 @@ const getAllWisata = async (req, res, next) => {
           )
         );
       });
-
-      const { _count } = await prisma.wisata.aggregate({
-        _count: true,
-      });
-
-      const pagination = getPagination(req, res, _count.id, page, limit);
-
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "OK",
         err: null,
-        data: { pagination, wisataObject },
+        data: wisataObject,
       });
     } catch (err) {
       return res.status(400).json({

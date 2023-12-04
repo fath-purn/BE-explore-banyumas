@@ -21,10 +21,13 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3000/api/v1/admin/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTcwMDg0MzU0OCwiZXhwIjoxNzAwOTI5OTQ4fQ.bhiG0dJoWQxuR6uml7MGpM-X1Jsmjo608MpVh8OezAc
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTcwMTY2Nzk0NCwiZXhwIjoxNzAxNzU0MzQ0fQ.MZV-DLPnSRcGr1Em3xltssN4nISto_9J5GYuYCj3NSw
 
 ### dapatkan semua hotel
 GET http://localhost:3000/api/v1/hotel
+
+### dapatkan semua hotel
+GET http://localhost:3000/api/v1/hotel?page=1&limit=10
 
 ### dapatkan hotel berdasarkan id
 GET http://localhost:3000/api/v1/hotel/:id

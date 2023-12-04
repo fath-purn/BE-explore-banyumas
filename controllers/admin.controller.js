@@ -29,6 +29,7 @@ const createAdmin = async (req, res, next) => {
         password: encryptedPassword,
       },
     });
+    delete newAdmin.password;
 
     return res.status(201).json({
       success: true,
@@ -89,7 +90,7 @@ const loginAdmin = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: 'Login success',
-      data: token,
+      token: token,
     });
   } catch (error) {
     next(error);
