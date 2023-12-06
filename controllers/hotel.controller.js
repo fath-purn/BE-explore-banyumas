@@ -37,7 +37,6 @@ const getAllHotel = async (req, res, next) => {
           take: limit,
         });
         
-        
         // jadikan 1 object
         const hotel = getHotel.map((h) => {
           const { gambar, fasilitas, kecamatan, ...rest } = h;

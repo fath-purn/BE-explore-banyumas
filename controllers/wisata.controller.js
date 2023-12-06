@@ -62,7 +62,7 @@ const getAllWisata = async (req, res, next) => {
         });
 
         const { _count } = await prisma.wisata.aggregate({
-          _count: true,
+          _count: { id: true },
         });
 
         const pagination = getPagination(req, res, _count.id, page, limit);
@@ -114,7 +114,7 @@ const getAllWisata = async (req, res, next) => {
         });
 
         const { _count } = await prisma.wisata.aggregate({
-          _count: true,
+          _count: { id: true },
         });
 
         const pagination = getPagination(req, res, _count.id, page, limit);
