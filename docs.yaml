@@ -6,7 +6,7 @@ info:
 servers:
   - url: https://be-explore-banyumas.vercel.app/api/v1
     description: Development server
-  - url: http://localhost:3000/api/v1
+  - url: http://localhost:8000/api/v1
     description: local server
 paths:
   # hotel
@@ -20,17 +20,24 @@ paths:
       parameters:
         - name: page
           in: query
-          description: Get users by page
+          description: Get hotel by page
           schema:
             type : integer
             format: int64
             minimum: 1
         - name: limit
           in: query
-          description: Get users by limit
+          description: Get hotel by limit
           schema:
             type : integer
             format: int64
+            minimum: 1
+        - name: search
+          in: query
+          description: Get hotel by search
+          schema:
+            type : string
+            format: string
             minimum: 1
       responses:
         "200":
@@ -177,7 +184,7 @@ paths:
         - name: id
           in: path
           required: true
-          description: Get User By Id
+          description: Get hotel By Id
           schema:
             type : integer
             format: int64
@@ -305,17 +312,24 @@ paths:
       parameters:
         - name: page
           in: query
-          description: Get users by page
+          description: Get wisata by page
           schema:
             type : integer
             format: int64
             minimum: 1
         - name: limit
           in: query
-          description: Get users by limit
+          description: Get wisata by limit
           schema:
             type : integer
             format: int64
+            minimum: 1
+        - name: search
+          in: query
+          description: Get wisata by search
+          schema:
+            type : string
+            format: string
             minimum: 1
       responses:
         "200":

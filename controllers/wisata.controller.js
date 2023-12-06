@@ -7,7 +7,75 @@ const { createWisataSchema } = require("../validations/validation");
 const getAllWisata = async (req, res, next) => {
   try {
     try {
-      if (req.query.length > 0) {
+      if ((req.query.page || req.query.limit) && req.query.search) {
+        let { page = 1, limit = 10 } = req.query;
+        page = Number(page);
+        limit = Number(limit);
+        const wisata = await prisma.wisata.findMany({
+          where: {
+            OR: [
+              {
+                nama: {
+                  contains: req.query.search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                alamat: {
+                  contains: req.query.search,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          },
+          include: {
+            gambar: true,
+            keterangan: true,
+            kecamatan: true,
+          },
+          skip: (page - 1) * limit,
+          take: limit,
+        });
+
+        // jadikan 1 object
+        const wisataObject = wisata.map((w) => {
+          const { gambar, keterangan, kecamatan, ...rest } = w;
+          const filteredItem = {
+            ...rest,
+            gambar: gambar.map((g) => g.url),
+            keterangan: {
+              jarak: keterangan.jarak,
+              buka: keterangan.buka,
+              tutup: keterangan.tutup,
+              akomodasi: keterangan.akomodasi,
+              kolam: keterangan.kolam,
+              parkir: keterangan.parkir,
+              tiket: keterangan.tiket,
+            },
+            kecamatan: kecamatan.nama,
+          };
+          return Object.fromEntries(
+            Object.entries(filteredItem).filter(
+              ([_, value]) => value !== undefined
+            )
+          );
+        });
+
+        const { _count } = await prisma.wisata.aggregate({
+          _count: true,
+        });
+
+        const pagination = getPagination(req, res, _count.id, page, limit);
+
+        return res.status(200).json({
+          success: true,
+          message: "OK",
+          err: null,
+          data: { pagination, wisataObject },
+        });
+      }
+
+      if (req.query.page || req.query.limit) {
         let { page = 1, limit = 10 } = req.query;
         page = Number(page);
         limit = Number(limit);
@@ -56,6 +124,64 @@ const getAllWisata = async (req, res, next) => {
           message: "OK",
           err: null,
           data: { pagination, wisataObject },
+        });
+      }
+
+      if (req.query.search) {
+        const { search } = req.query;
+        const wisata = await prisma.wisata.findMany({
+          where: {
+            OR: [
+              {
+                nama: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                alamat: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          },
+          include: {
+            gambar: true,
+            keterangan: true,
+            kecamatan: true,
+          },
+        });
+
+        // jadikan 1 object
+        const wisataObject = wisata.map((w) => {
+          const { gambar, keterangan, kecamatan, ...rest } = w;
+          const filteredItem = {
+            ...rest,
+            gambar: gambar.map((g) => g.url),
+            keterangan: {
+              jarak: keterangan.jarak,
+              buka: keterangan.buka,
+              tutup: keterangan.tutup,
+              akomodasi: keterangan.akomodasi,
+              kolam: keterangan.kolam,
+              parkir: keterangan.parkir,
+              tiket: keterangan.tiket,
+            },
+            kecamatan: kecamatan.nama,
+          };
+          return Object.fromEntries(
+            Object.entries(filteredItem).filter(
+              ([_, value]) => value !== undefined
+            )
+          );
+        });
+
+        return res.status(200).json({
+          success: true,
+          message: "OK",
+          err: null,
+          data: wisataObject,
         });
       }
 
