@@ -250,6 +250,22 @@ const getWisataById = async (req, res, next) => {
         },
       });
 
+      const hotelTerdekat = await prisma.kecamatan.findUnique({
+        where: {
+          id: wisata.idKecamatan,
+        },
+        include: {
+          hotel: {
+            include: {
+              gambar: true,
+            },
+          },
+          take: 2,
+        },
+      });
+
+      console.log(hotelTerdekat)
+
       // jadikan 1 object
       const wisataObject = {
         ...wisata,
@@ -275,11 +291,25 @@ const getWisataById = async (req, res, next) => {
         });
       }
 
+      const dataHotelTerdekat = hotelTerdekat.hotel.map((h) => {
+        const { gambar, ...rest } = h;
+        const filteredItem = {
+          id: rest.id,
+          nama: rest.nama,
+          gambar: gambar[0].url,
+        };
+        return Object.fromEntries(
+          Object.entries(filteredItem).filter(
+            ([_, value]) => value !== undefined
+          )
+        );
+      });
+
       res.status(200).json({
         success: true,
         message: "OK",
         err: null,
-        data: wisataObject,
+        data: { wisataObject, hotelTerdekat: dataHotelTerdekat },
       });
     } catch (err) {
       return res.status(400).json({

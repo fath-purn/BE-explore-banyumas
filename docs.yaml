@@ -9,6 +9,43 @@ servers:
   - url: http://localhost:8000/api/v1
     description: local server
 paths:
+  /all:
+    get:
+      tags:
+        - all
+      summary: Mendapatkan total data 
+      description: Mendapatkan total data wisata, hotel, ulasan, kecamatan
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BasicResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object 
+                        properties: 
+                          hotel: 
+                            type: number
+                            example: 1
+                          wisata: 
+                            type: number
+                            example: 1
+                          kecamatan: 
+                            type: number
+                            example: 1
+                          ulasan: 
+                            type: number
+                            example: 1
+        
+        '201':
+          description: OK!
+        '400':
+          description: Invalid status value
+
   # hotel
   /hotel:
     get:
@@ -575,6 +612,21 @@ paths:
       summary: Mendapatkan data kecamatan
       description: Mendapatkan semua data kecamatan
       operationId: getKecamatan
+      parameters:
+        - name: page
+          in: query
+          description: Get hotel by page
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+        - name: limit
+          in: query
+          description: Get hotel by limit
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
       responses:
         "200":
           description: Successful operation

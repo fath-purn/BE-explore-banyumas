@@ -1,6 +1,5 @@
 const prisma = require("../libs/prisma");
 const { getPagination } = require("../helpers/pagination");
-const path = require("path");
 
 const getAllKecamatan = async (req, res, next) => {
   try {
@@ -164,6 +163,40 @@ const deleteKecamatan = async (req, res, next) => {
 const getAllKecamatanAndCountHotelOrWisata = async (req, res, next) => {
   try {
     try {
+      if (req.query.page || req.query.limit) {
+        let { page = 1, limit = 10 } = req.query;
+        page = Number(page);
+        limit = Number(limit);
+        const kecamatan = await prisma.kecamatan.findMany({
+          include: {
+            _count: {
+              select: { hotel: true, wisata: true },
+            },
+          },
+          skip: (page - 1) * limit,
+          take: limit,
+        });
+
+        const { _count } = await prisma.kecamatan.aggregate({
+          _count: true,
+        });
+  
+        const pagination = getPagination(req, res, _count.id, page, limit);
+
+        kecamatan.map((item) => {
+          item.jumlah_hotel = item._count.hotel;
+          item.jumlah_wisata = item._count.wisata;
+          delete item._count;
+        });
+
+        res.status(200).json({
+          status: true,
+          message: "Success!",
+          err: null,
+          data: {pagination, kecamatan},
+        });
+      }
+
       const kecamatan = await prisma.kecamatan.findMany({
         include: {
           _count: {
@@ -180,7 +213,7 @@ const getAllKecamatanAndCountHotelOrWisata = async (req, res, next) => {
 
       res.status(200).json({
         status: true,
-        message: "OK!",
+        message: "Success!",
         err: null,
         data: kecamatan,
       });
