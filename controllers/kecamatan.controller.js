@@ -202,19 +202,21 @@ const getAllKecamatanAndCountHotelOrWisata = async (req, res, next) => {
           const firstWisata = item.wisata[0];
           const representativeHotelImage = firstHotel?.gambar[0]?.url;
           const representativeWisataImage = firstWisata?.gambar[0]?.url;
-
+        
           return {
+            id: item.id,
             nama: item.nama,
             hotel: {
               total: item._count.hotel,
-              gambar: representativeHotelImage || null,
+              representativeImage: representativeHotelImage || null,
             },
             wisata: {
               total: item._count.wisata,
-              gambar: representativeWisataImage || null,
+              representativeImage: representativeWisataImage || null,
             },
           };
         });
+        
 
         res.status(200).json({
           status: true,
