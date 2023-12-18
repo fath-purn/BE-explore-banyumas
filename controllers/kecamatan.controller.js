@@ -191,17 +191,11 @@ const getAllKecamatanAndCountHotelOrWisata = async (req, res, next) => {
           take: limit,
         });
 
-        const { _count } = await prisma.wisata.aggregate({
+        const { _count } = await prisma.kecamatan.aggregate({
           _count: { id: true },
         });
 
         const pagination = getPagination(req, res, _count.id, page, limit);
-
-        // kecamatan.map((item) => {
-        //   item.jumlah_hotel = item._count.hotel;
-        //   item.jumlah_wisata = item._count.wisata;
-        //   delete item._count;
-        // });
 
         const kecamatanData = kecamatan.map((item) => {
           const firstHotel = item.hotel[0];
