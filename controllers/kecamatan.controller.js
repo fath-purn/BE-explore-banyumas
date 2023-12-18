@@ -9,13 +9,13 @@ const getAllKecamatan = async (req, res, next) => {
         page = Number(page);
         limit = Number(limit);
         const kecamatan = await prisma.kecamatan.findMany({});
-  
+
         const { _count } = await prisma.kecamatan.aggregate({
           _count: true,
         });
-  
+
         const pagination = getPagination(req, res, _count.id, page, limit);
-  
+
         res.status(200).json({
           status: true,
           message: "Success!",
@@ -167,6 +167,7 @@ const getAllKecamatanAndCountHotelOrWisata = async (req, res, next) => {
         let { page = 1, limit = 10 } = req.query;
         page = Number(page);
         limit = Number(limit);
+        
         const kecamatan = await prisma.kecamatan.findMany({
           include: {
             _count: {
@@ -177,10 +178,10 @@ const getAllKecamatanAndCountHotelOrWisata = async (req, res, next) => {
           take: limit,
         });
 
-        const { _count } = await prisma.kecamatan.aggregate({
-          _count: true,
+        const { _count } = await prisma.wisata.aggregate({
+          _count: { id: true },
         });
-  
+
         const pagination = getPagination(req, res, _count.id, page, limit);
 
         kecamatan.map((item) => {
@@ -193,7 +194,7 @@ const getAllKecamatanAndCountHotelOrWisata = async (req, res, next) => {
           status: true,
           message: "Success!",
           err: null,
-          data: {pagination, kecamatan},
+          data: { pagination, kecamatan },
         });
       }
 
@@ -279,7 +280,9 @@ const getAllHotelByKecamatan = async (req, res, next) => {
           },
         };
         return Object.fromEntries(
-          Object.entries(filteredItem).filter(([_, value]) => value !== undefined)
+          Object.entries(filteredItem).filter(
+            ([_, value]) => value !== undefined
+          )
         );
       });
 
@@ -299,7 +302,7 @@ const getAllHotelByKecamatan = async (req, res, next) => {
         status: true,
         message: "OK!",
         err: null,
-        data: {pagination, kecamatan},
+        data: { pagination, kecamatan },
       });
     } catch (err) {
       res.status(400).json({
@@ -383,7 +386,7 @@ const getAllWisataByKecamatan = async (req, res, next) => {
         status: true,
         message: "OK!",
         err: null,
-        data: {pagination, kecamatan},
+        data: { pagination, kecamatan },
       });
     } catch (err) {
       res.status(400).json({
