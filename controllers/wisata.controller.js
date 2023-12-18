@@ -11,6 +11,7 @@ const getAllWisata = async (req, res, next) => {
         let { page = 1, limit = 10 } = req.query;
         page = Number(page);
         limit = Number(limit);
+        
         const wisata = await prisma.wisata.findMany({
           where: {
             OR: [

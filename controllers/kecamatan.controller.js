@@ -167,11 +167,24 @@ const getAllKecamatanAndCountHotelOrWisata = async (req, res, next) => {
         let { page = 1, limit = 10 } = req.query;
         page = Number(page);
         limit = Number(limit);
-        
+
         const kecamatan = await prisma.kecamatan.findMany({
           include: {
             _count: {
-              select: { hotel: true, wisata: true },
+              select: {
+                hotel: true,
+                wisata: true,
+              },
+            },
+            hotel: {
+              include: {
+                gambar: true,
+              },
+            },
+            wisata: {
+              include: {
+                gambar: true,
+              },
             },
           },
           skip: (page - 1) * limit,
@@ -184,17 +197,36 @@ const getAllKecamatanAndCountHotelOrWisata = async (req, res, next) => {
 
         const pagination = getPagination(req, res, _count.id, page, limit);
 
-        kecamatan.map((item) => {
-          item.jumlah_hotel = item._count.hotel;
-          item.jumlah_wisata = item._count.wisata;
-          delete item._count;
+        // kecamatan.map((item) => {
+        //   item.jumlah_hotel = item._count.hotel;
+        //   item.jumlah_wisata = item._count.wisata;
+        //   delete item._count;
+        // });
+
+        const kecamatanData = kecamatan.map((item) => {
+          const firstHotel = item.hotel[0];
+          const firstWisata = item.wisata[0];
+          const representativeHotelImage = firstHotel?.gambar[0]?.url;
+          const representativeWisataImage = firstWisata?.gambar[0]?.url;
+
+          return {
+            nama: item.nama,
+            hotel: {
+              total: item._count.hotel,
+              gambar: representativeHotelImage || null,
+            },
+            wisata: {
+              total: item._count.wisata,
+              gambar: representativeWisataImage || null,
+            },
+          };
         });
 
         res.status(200).json({
           status: true,
           message: "Success!",
           err: null,
-          data: { pagination, kecamatan },
+          data: { pagination, kecamatan: kecamatanData },
         });
       }
 
