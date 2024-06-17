@@ -23,6 +23,13 @@ const createWisataSchema = joi.object({
   tiket: joi.number().required(),
 });
 
+const creatFoodSchema = joi.object({
+  nama: joi.string().required(),
+  deskripsi: joi.string().required(),
+  harga: joi.number().required(),
+  idKecamatan: joi.number().required(),
+})
+
 const createUlasanSchema = joi.object({
   nama: joi.string().required(),
   ulasan: joi.string().required(),
@@ -34,4 +41,5 @@ module.exports = {
   createHotelSchema,
   createWisataSchema,
   createUlasanSchema,
+  creatFoodSchema,
 };

@@ -208,11 +208,11 @@ const getAllKecamatanAndCountHotelOrWisata = async (req, res, next) => {
             nama: item.nama,
             hotel: {
               total: item._count.hotel,
-              representativeImage: representativeHotelImage || null,
+              hotel: representativeHotelImage || null,
             },
             wisata: {
               total: item._count.wisata,
-              representativeImage: representativeWisataImage || null,
+              wisata: representativeWisataImage || null,
             },
           };
         });

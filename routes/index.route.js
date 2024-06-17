@@ -39,5 +39,6 @@ router.use("/kecamatan", require("./kecamatan.route"));
 router.use("/hotel", require("./hotel.route"));
 router.use("/wisata", require("./wisata.route"));
 router.use("/ulasan", require("./ulasan.route"));
+router.use("/food", require("./food.route"));
 
 module.exports = router;

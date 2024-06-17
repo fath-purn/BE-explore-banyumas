@@ -11,12 +11,13 @@ datasource db {
 }
 
 model Kecamatan {
-  id        Int      @id @default(autoincrement())
-  nama      String
-  wisata    Wisata[]
-  hotel     Hotel[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int           @id @default(autoincrement())
+  nama         String
+  wisata       Wisata[]
+  hotel        Hotel[]
+  makananKhas  MakananKhas[] // Relasi dengan MakananKhas
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Wisata {
@@ -60,6 +61,8 @@ model Gambar {
   wisata     Wisata?  @relation(fields: [wisataId], references: [id])
   hotelId    Int?
   hotel      Hotel?   @relation(fields: [hotelId], references: [id])
+  makananKhasId Int?
+  makananKhas MakananKhas? @relation(fields: [makananKhasId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -114,4 +117,16 @@ model Admin {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model MakananKhas {
+  id          Int           @id @default(autoincrement())
+  nama        String
+  deskripsi   String
+  harga       Int
+  gambar      Gambar[]
+  idKecamatan Int
+  kecamatan   Kecamatan     @relation(fields: [idKecamatan], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
