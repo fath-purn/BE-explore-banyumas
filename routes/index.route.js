@@ -15,12 +15,13 @@ router.get("/all", async (req, res, next) => {
       const kecamatan = await prisma.kecamatan.count();
       const wisata = await prisma.wisata.count();
       const ulasan = await prisma.ulasan.count();
+      const makanan = await prisma.makananKhas.count();
 
       res.status(200).json({
         status: true,
         message: "Succes!",
         err: null,
-        data: { hotel, wisata, kecamatan, ulasan },
+        data: { hotel, wisata, kecamatan, ulasan, makanan },
       });
     } catch (error) {
       res.status(404).json({
