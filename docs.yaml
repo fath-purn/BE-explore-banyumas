@@ -338,6 +338,215 @@ paths:
       security:
       - bearerAuth: []
     
+  # makanan
+  /food:
+    get:
+      tags:
+        - Makanan
+      summary: Mendapatkan semua data makanan
+      description: Mendapatkan semua data makanan khas yang ada di Banyumas
+      operationId: getFood
+      parameters:
+        - name: page
+          in: query
+          description: Get food by page
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+        - name: limit
+          in: query
+          description: Get food by limit
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+        - name: search
+          in: query
+          description: Get food by search
+          schema:
+            type : string
+            format: string
+            minimum: 1
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BasicResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          pagination:
+                            $ref: "#/components/schemas/Pagination"
+                          food:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/Food"        
+        
+        '201':
+          description: OK!
+        '400':
+          description: Invalid status value
+    
+    post:
+      tags:
+        - Makanan
+      summary: Menambahkan data makanan
+      description: Menambahkan data makanan
+      operationId: Create-food
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  default: "Hotel 1"
+                deskripsi:
+                  type: string
+                  default: "Jl. Hotel 1"
+                alamat:
+                  type: string
+                  default: "08123456789"
+                price:
+                  type: integer
+                  default: 100000
+                idKecamatan:
+                  type: integer
+                  default: 1
+                image:
+                  type: string
+                  format: binary
+                  description: Masukkan 3 gambar
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: OK!
+        '400':
+          description: Invalid status value
+
+  /food/{id}:
+    get:
+      tags:
+        - Makanan
+      summary: Mendapatkan data makanan sesuai id
+      description: Mendapatkan data makanan sesuai id
+      operationId: getFoodById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Get User By Id
+          schema:
+            type : integer
+            format: int64
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/BasicResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/Food"   
+        '400':
+          description: Invalid status value
+    
+    put:
+      tags:
+        - Makanan
+      summary: Edit makanan sesuai id
+      description: Edit makanan sesuai id
+      operationId: update-food
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Get food By Id
+          schema:
+            type : integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  default: "Hotel 1"
+                deskripsi:
+                  type: string
+                  default: "Jl. Hotel 1"
+                harga:
+                  type: integer
+                  default: 100000
+                idKecamatan:
+                  type: integer
+                  default: 1
+                image:
+                  type: string
+                  format: binary
+                  description: Masukkan 3 gambar
+      security:
+        - bearerAuth: []          
+      responses:
+        '201':
+          description: OK!
+        '400':
+          description: Invalid status value
+    
+    delete:
+      tags:
+        - Makanan
+      summary: Menghapus makanan
+      description: Menghapus makanan sesuai id yang diberikan
+      operationId: deleteMakananById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Get food By Id
+          schema:
+            type : integer
+            format: int64
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Makanan berhasil dihapus"
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    example: null
+        '400':
+          description: Invalid status value
+      security:
+      - bearerAuth: []
+    
   # wisata
   /wisata:
     get:
@@ -1284,6 +1493,39 @@ components:
             bedroom:
               type: boolean
               example: true
+    Food: 
+      title: Hotel
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nama:
+          type: string
+          example: "Hotel 1"
+        deskripsi:
+          type: string
+          example: "Jl. Hotel 1"
+        harga:
+          type: integer
+          example: 100000
+        idKecamatan:
+          type: integer
+          example: 1
+        createdAt:
+          type: string
+          example: "2021-08-01T00:00:00.000Z"
+        updatedAt:
+          type: string
+          example: "2021-08-01T00:00:00.000Z"
+        gambar:
+          type: array
+          items:
+            type: string
+            example: "https://domain.com/image.jpg"
+        kecamatan:
+          type: string
+          example: "Banyumas"
     Wisata: 
       title: Wisata
       type: object

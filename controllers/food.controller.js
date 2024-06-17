@@ -6,7 +6,6 @@ const { creatFoodSchema } = require("../validations/validation");
 
 const getAllFood = async (req, res, next) => {
   try {
-    console.log("masuk sini");
     if ((req.query.page || req.query.limit) && req.query.search) {
       let { page = 1, limit = 10 } = req.query;
       page = Number(page);
@@ -21,7 +20,7 @@ const getAllFood = async (req, res, next) => {
               },
             },
             {
-              alamat: {
+              deskripsi: {
                 contains: req.query.search,
                 mode: "insensitive",
               },
@@ -119,7 +118,7 @@ const getAllFood = async (req, res, next) => {
               },
             },
             {
-              alamat: {
+              deskripsi: {
                 contains: search,
                 mode: "insensitive",
               },
