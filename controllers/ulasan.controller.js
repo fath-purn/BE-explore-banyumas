@@ -23,22 +23,24 @@ const getAllUlasan = async (req, res, next) => {
           }
         },
       });
-
-      const filteredUlasan = ulasan.map((item) => {
-        const { wisata, Hotel, MakananKhas, ...rest } = item;
-        const filteredItem = {
-          ...rest,
-          wisata: wisata ? wisata.nama : undefined,
-          Hotel: Hotel ? Hotel.nama : undefined,
-          MakananKhas: MakananKhas ? MakananKhas.nama : undefined,
-        };
-        return Object.fromEntries(
-          Object.entries(filteredItem).filter(
-            ([_, value]) => value !== undefined
-          )
-        );
-      });
-
+    
+      const filteredUlasan = ulasan
+        .map((item) => {
+          const { wisata, Hotel, MakananKhas, ...rest } = item;
+          const filteredItem = {
+            ...rest,
+            wisata: wisata ? wisata.nama : undefined,
+            Hotel: Hotel ? Hotel.nama : undefined,
+            MakananKhas: MakananKhas ? MakananKhas.nama : undefined,
+          };
+          return Object.fromEntries(
+            Object.entries(filteredItem).filter(
+              ([key, value]) => key === 'wisata' || key === 'Hotel' || key === 'MakananKhas' ? value !== undefined : true
+            )
+          );
+        })
+        .filter(item => item.wisata || item.Hotel || item.MakananKhas);
+    
       res.status(200).json({
         success: true,
         message: "OK",
