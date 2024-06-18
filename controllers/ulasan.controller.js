@@ -25,11 +25,12 @@ const getAllUlasan = async (req, res, next) => {
       });
 
       const filteredUlasan = ulasan.map((item) => {
-        const { wisata, Hotel, ...rest } = item;
+        const { wisata, Hotel, MakananKhas, ...rest } = item;
         const filteredItem = {
           ...rest,
           wisata: wisata ? wisata.nama : undefined,
           Hotel: Hotel ? Hotel.nama : undefined,
+          MakananKhas: MakananKhas ? MakananKhas.nama : undefined,
         };
         return Object.fromEntries(
           Object.entries(filteredItem).filter(
@@ -42,7 +43,7 @@ const getAllUlasan = async (req, res, next) => {
         success: true,
         message: "OK",
         err: null,
-        data: ulasan,
+        data: filteredUlasan,
       });
     } catch (error) {
       return res.status(400).json({
