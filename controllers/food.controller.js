@@ -526,10 +526,39 @@ const deleteFood = async (req, res, next) => {
   }
 };
 
+// pages/api/ongkir.js
+
+async function ongkir(req, res) {
+    try {
+      const { origin, destination, weight, courier } = req.body;
+
+      const response = await fetch(`https://api.rajaongkir.com/starter/cost`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          key: '37389add0359d4b73a8c18ced387d76e',
+          origin,
+          destination,
+          weight,
+          courier,
+        }),
+      });
+
+      const data = await response.json();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+
 module.exports = {
   getFoodById,
   getAllFood,
   createFood,
   updateFood,
   deleteFood,
+  ongkir,
 };
