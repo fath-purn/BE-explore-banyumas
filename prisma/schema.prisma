@@ -107,6 +107,8 @@ model Ulasan {
   wisata    Wisata?  @relation(fields: [wisataId], references: [id])
   hotelId   Int?
   Hotel     Hotel?   @relation(fields: [hotelId], references: [id])
+  makananId   Int?
+  MakananKhas     MakananKhas?   @relation(fields: [makananId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -126,6 +128,7 @@ model MakananKhas {
   harga       Int
   gambar      Gambar[]
   idKecamatan Int
+  ulasan      Ulasan[]
   kecamatan   Kecamatan     @relation(fields: [idKecamatan], references: [id])
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

@@ -16,6 +16,11 @@ const getAllUlasan = async (req, res, next) => {
               nama: true,
             },
           },
+          MakananKhas: {
+            select: {
+              nama: true,
+            }
+          }
         },
       });
 
@@ -37,7 +42,7 @@ const getAllUlasan = async (req, res, next) => {
         success: true,
         message: "OK",
         err: null,
-        data: filteredUlasan,
+        data: ulasan,
       });
     } catch (error) {
       return res.status(400).json({
