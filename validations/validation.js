@@ -35,6 +35,7 @@ const createUlasanSchema = joi.object({
   ulasan: joi.string().required(),
   wisataId: joi.number(),
   hotelId: joi.number(),
+  makananId: joi.number(),
 });
 
 module.exports = {

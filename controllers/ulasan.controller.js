@@ -116,7 +116,7 @@ const getUlasanById = async (req, res, next) => {
 
 const createUlasan = async (req, res, next) => {
   try {
-    const { nama, ulasan, wisataId, hotelId } = req.body;
+    const { nama, ulasan, wisataId, hotelId, makananId } = req.body;
 
     try {
       await createUlasanSchema.validateAsync({
@@ -124,6 +124,7 @@ const createUlasan = async (req, res, next) => {
         ulasan,
         wisataId,
         hotelId,
+        makananId,
       });
     } catch (err) {
       return res.status(400).json({
@@ -140,6 +141,7 @@ const createUlasan = async (req, res, next) => {
         ulasan,
         wisataId: Number(wisataId),
         hotelId: Number(hotelId),
+        makananId: Number(makananId),
       },
     });
     res.status(201).json({

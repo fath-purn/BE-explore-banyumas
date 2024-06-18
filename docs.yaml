@@ -1165,6 +1165,40 @@ paths:
                               type: string
                               example: "The Westin Singapore"
   
+    post:
+      tags:
+        - Ulasan
+      summary: Menambahkan ulasan 
+      description: Menambahkan ulasan di wisata atau di hotel sesuai id
+      operationId: create-ulasan
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  default: "ads"
+                ulasan:
+                  type: string
+                  default: "apa adanya"
+                wisataId:
+                  type: number
+                  default: null
+                hotelId:
+                  type: string
+                  default: null
+                makananId:
+                  type: number
+                  default: null
+      responses:
+        '201':
+          description: OK!
+        '400':
+          description: Invalid status value
+
   /ulasan/{id}:
     get:
       tags:
@@ -1229,36 +1263,7 @@ paths:
         '400':
           description: Invalid status value
     
-    post:
-      tags:
-        - Ulasan
-      summary: Menambahkan ulasan 
-      description: Menambahkan ulasan di wisata atau di hotel sesuai id
-      operationId: create-ulasan
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                nama:
-                  type: string
-                  default: "ads"
-                ulasan:
-                  type: string
-                  default: "apa adanya"
-                wisataId:
-                  type: integer
-                  default: 20
-                hotelId:
-                  type: string
-                  default: null
-      responses:
-        '201':
-          description: OK!
-        '400':
-          description: Invalid status value
+    
     
     put:
       tags:
