@@ -334,20 +334,9 @@ const createFood = async (req, res, next) => {
 const updateFood = async (req, res, next) => {
   try {
     const { id } = req.params;
-    // const { value, error } = creatFoodSchema.validate(req.body);
 
     // Melakukan deklarasi nilai yang dikirim
     const { nama, deskripsi, harga, idKecamatan } = req.body;
-
-    // Jika tidak lolos validasi maka akan error dan mengembalikan status 400
-    if (error) {
-      return res.status(400).json({
-        success: false,
-        message: "Bad Request!",
-        err: error.message,
-        data: null,
-      });
-    }
 
     // Cek food
     const food = await prisma.makananKhas.findUnique({
@@ -422,8 +411,8 @@ const updateFood = async (req, res, next) => {
       data: {
         nama,
         deskripsi,
-        harga: Number(harga),
-        idKecamatan: Number(idKecamatan),
+        harga: harga ? Number(harga) : food.harga ,
+        idKecamatan: idKecamatan ? Number(idKecamatan) : food.idKecamatan,
       },
     });
 
