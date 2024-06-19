@@ -334,10 +334,10 @@ const createFood = async (req, res, next) => {
 const updateFood = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { value, error } = creatFoodSchema.validate(req.body);
+    // const { value, error } = creatFoodSchema.validate(req.body);
 
     // Melakukan deklarasi nilai yang dikirim
-    const { nama, deskripsi, harga, idKecamatan } = value;
+    const { nama, deskripsi, harga, idKecamatan } = req.body;
 
     // Jika tidak lolos validasi maka akan error dan mengembalikan status 400
     if (error) {
